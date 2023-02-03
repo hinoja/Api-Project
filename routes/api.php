@@ -21,4 +21,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get("/listUser", [Usercontroller::class, 'listUser']);
     Route::delete("/destroy{id}", [Usercontroller::class,'delete']);
     Route::get("/logout", [Usercontroller::class,'logout']);
+    Route::get("/pizzas", [pizzaController::class,'index']);
 });

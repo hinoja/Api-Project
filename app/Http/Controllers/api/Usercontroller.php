@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Notifications\WelcomeNotification;
+use Illuminate\Support\Facades\Notification;
 
 class Usercontroller extends Controller
 {
@@ -22,11 +24,11 @@ class Usercontroller extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-
+        Notification::send($user, new WelcomeNotification($user));
         return response()->json([
             "Staus" => "1",
             "user" => $user,
-            "message" => "User Created with successfull"
+            "message" => "User Created with successfull and verify your emailBox"
         ]);
     }
     public function listUser()
@@ -66,6 +68,7 @@ class Usercontroller extends Controller
             if (Hash::check($request->password, $user->password)) {
                 $token =  $user->createToken('auth_token')->plainTextToken;
                 // Auth::login($user);
+
                 return response()->json([
                     "Staus" => "1",
                     "info" => "Welcome " . $request->name,
@@ -85,8 +88,10 @@ class Usercontroller extends Controller
         }
     }
 
-    public function logout(){
-        Auth::user()->tokens()->delete();
+    public function logout()
+    {
+        Auth::user()->tokens->delete();
+        // Auth::user()->tokens->revoke();
         return response()->json([
             "Staus" => "1",
             "info" => "Deconnexion successfull"

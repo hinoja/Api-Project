@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CheckMailController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\pizzaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +19,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/pokemons', [pokemonController::class, 'index'])->name('pokemon');
+});
+Route::get('/pizzas', [pizzaController::class, 'index'])->name('pizza');
+Route::get('/movies', [MovieController::class, 'search'])->name('movies');
+Route::view('/search', 'search');
+ 
